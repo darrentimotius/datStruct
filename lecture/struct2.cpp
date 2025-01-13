@@ -118,13 +118,24 @@ void borrow() {
                     break;
                 }
             }
+
         } while (idx == -1);
+
+        if (dat[idx].quantity == 0) {
+            puts("Can't borrow");
+            return;
+        }
     } else {
         do {
             printf("Input book id : ");
             scanf("%d", &idx); gc
             idx --;
         } while (idx < 0 || idx > bookCount);
+        
+        if (dat[idx].quantity == 0) {
+            puts("Can't borrow");
+            return;
+        }
     }
     
     puts("Book has been successfully borrowed");
