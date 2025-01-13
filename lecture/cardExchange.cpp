@@ -173,9 +173,24 @@ void sellCard() {
     printf("Input card name : ");
     scanf("%[^\n]", name); gc
 
-    pop(name);
+    int found = -1;
+    data *temp = h;
+    while (temp != NULL) {
+        if (strcmp(name, temp->name) == 0) {
+            found = 1;
+            break;
+        } else temp = temp->next;
+    }
+
+    if (found == 1) {
+        pop(name);
+        count--;
+    } else {
+        puts("There is no card");
+        enterToContinue();
+        return;
+    }
     puts("Card has been succesfully sold");
-    count--;
     enterToContinue();
 }
 
@@ -187,10 +202,26 @@ void changeCard() {
     printf("Input card name before : ");
     scanf("%[^\n]", name1); gc
 
+    int found = -1;
+    data *temp = h;
+    while (temp != NULL) {
+        if (strcmp(name1, temp->name) == 0) {
+            found = 1;
+            break;
+        } else temp = temp->next;
+    }
+
+    if (found == 1) {
+        pop(name1);
+    } else {
+        puts("There is no card");
+        enterToContinue();
+        return;
+    }
+
     printf("Input card name after : ");
     scanf("%[^\n]", name2); gc
 
-    pop(name1);
     pushMid(name2);
     puts("Card has been succesfully changed");
     enterToContinue();
