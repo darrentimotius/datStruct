@@ -90,6 +90,15 @@ void popTail(){
     free(curr);
 }
 
+void popTail2() {
+    if (t == NULL) return;
+    tnode *temp = t;
+    t = temp->prev;
+    t->next = NULL;
+    temp->prev = NULL;
+    free(temp);
+}
+
 void popMiddle(int value)
 {
     if (h == NULL) return;
@@ -164,11 +173,12 @@ int main(int argc, const char * argv[]) {
     pushMiddle(6);
     pushMiddle(5);
     PrintallNext();
-    PrintallPrev();
-    popTail();
-    popHead();
+    // PrintallPrev();
+    // popTail();
+    popTail2();
+    // popHead();
     PrintallNext();
-    PrintallPrev();
+    // PrintallPrev();
     
     return 0;
 }

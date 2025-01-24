@@ -1,23 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include <string.h>
 
 #define gc getchar();
 
-struct data {
-    int id;
-    char name[100];
-    data *next;
-    data *prev;
-} *h, *c, *t, *now;
-
 int count = 0;
 int modeNum = 2;
 
+struct data {
+    int id;
+    char name[100];
+    data *prev;
+    data *next;
+} *h, *c, *t, *now;
+
 char musik[50][100] {
     "Heidi Montag - Superficial",
-    "ROSÉ & Bruno Mars - APT.",
+    "ROSE & Bruno Mars - APT.",
     "Lady Gaga & Bruno Mars - Die With A Smile",
     "Teddy Swims & GIVĒON - Are You Even Real",
     "Morgan Wallen - Smile",
@@ -42,9 +41,8 @@ void printMenu();
 void enterToContinue();
 
 void push(char name[]);
-void pop(char name[]);
 
-void view(data *temp);
+void view();
 void addSong();
 void mode();
 void previous();
@@ -73,7 +71,7 @@ int main() {
                 next();
                 break;
             case 5:
-                view(h);
+                view();
                 break;
             case 6:
                 enterToContinue();
@@ -84,7 +82,7 @@ int main() {
 
 void printMenu() {
     system("clear");
-    puts("SpoDidy");
+    puts("Fance's Music");
     if (now != NULL) printf("Now Playing : %s\n", now->name);
     if (modeNum == 1) printf("Mode : Loop\n\n");
     else printf("Mode : Play Once\n\n");
@@ -103,57 +101,75 @@ void enterToContinue() {
 void push(char name[]) {
     c = (data*)malloc(sizeof(data));
 
-    strcpy(c->name, name);
     c->id = count + 1;
+    strcpy(c->name, name);
     c->next = NULL;
     c->prev = NULL;
 
     if (!h) {
         h = t = c;
     } else {
-        t->next = c;
-        c->prev = t;
+        // Push Tail
+        t->next = c; // kiri ke kanan
+        c->prev = t; // kanan ke kiri
         t = c;
     }
 }
 
-void view(data *temp) {
-    if (temp == NULL) {
-        puts("There is no song");
-        enterToContinue();
-        return;
-    }
+void view() {
+    t->next = NULL; // Kiri ke kanan
+    h->prev = NULL; // Kanan ke kiri
 
-    while (temp != NULL) {
+    data *temp = h;
+    while (temp != NULL) { // Berhenti ketika ketemu NULL
         printf("%d. %s\n", temp->id, temp->name);
         temp = temp->next;
     }
+
+    // Mode LOOP
+    if (modeNum == 1) {
+        t->next = h; // Kiri ke kanan
+        h->prev = t; // Kanan ke kiri
+    }
     enterToContinue();
 }
-
 void addSong() {
+    // Nampilin list lagu
     for (int i = 0; i < 20; i++) {
         printf("%d. %s\n", i + 1, musik[i]);
     }
-    printf("\n");
 
-    int input;
+    // Validasi untuk mode LOOP (Putusin hubungan head sama tail)
+    if (modeNum == 1) {
+        t->next = NULL; // kiri ke kanan
+        h->prev = NULL; // kanan ke kiri
+    }
+
+    int input = -1;
     do {
         printf("Input number you want to add : ");
         scanf("%d", &input); gc
-    } while (input < 0 || input > 20);
+    } while (input < 1 || input > 20);
 
-    input--;
-    push(musik[input]);
-    puts("Song has been succesfully added");
+    push(musik[input-1]);
     count++;
-    if (h == t) now = h;
+
+    if (h == t) {
+        now = h;
+    }
+
+    // Validasi untuk mode LOOP (head terhubung sama tail)
+    if (modeNum == 1) {
+        t->next = h; // kiri ke kanan
+        h->prev = t; // kanan ke kiri
+    }
+
+    puts("Song has been succefully added");
     enterToContinue();
 }
-
 void mode() {
     if (h == NULL) {
-        puts("There is no song");
+        puts("There is no song added");
         enterToContinue();
         return;
     }
@@ -161,31 +177,32 @@ void mode() {
     puts("1. Loop");
     puts("2. Play Once");
 
-    do {
-        printf(">> ");
-        scanf("%d", &modeNum); gc
-    } while (modeNum < 0 || modeNum > 2);
+    printf(">> ");
+    scanf("%d", &modeNum); gc
 
+    // LOOP
     if (modeNum == 1) {
-        t->next = h;
-        h->prev = t;
+        t->next = h; // kiri ke kanan
+        h->prev = t; // kanan ke kiri
     }
+
     puts("Mode has been changed");
     enterToContinue();
 }
-
 void previous() {
-    if (now == h && modeNum == 2) {
+    // Play Once
+    if (now->prev == NULL && modeNum == 1) {
         return;
     }
-
+    // Loop
     now = now->prev;
 }
-
 void next() {
-    if (now == t && modeNum == 2) {
+    // Play Once
+    if (now->next == NULL && modeNum == 1) {
         return;
     }
 
+    // Loop
     now = now->next;
 }
