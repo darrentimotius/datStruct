@@ -71,7 +71,7 @@ tnode *buildInTree(char infix[]) {
         if (isdigit(infix[i])) {
             operandStack[++operandTop] = createNode(infix[i]);
         } else if (isOperator(infix[i])) {
-            while (operandTop != -1 && rank(operatorStack[operatorTop]) >= rank(infix[i])) {
+            while (operatorTop != -1 && rank(operatorStack[operatorTop]) >= rank(infix[i])) {
                 tnode *opNode = createNode(operatorStack[operatorTop--]);
                 opNode->right = operandStack[operandTop--];
                 opNode->left = operandStack[operandTop--];
@@ -82,7 +82,7 @@ tnode *buildInTree(char infix[]) {
     }
     
     while (operatorTop != -1) {
-        tnode *opNode = createNode(operatorStack[operandTop--]);
+        tnode *opNode = createNode(operatorStack[operatorTop--]);
         opNode->right = operandStack[operandTop--];
         opNode->left = operandStack[operandTop--];
         operandStack[++operandTop] = opNode;
@@ -136,7 +136,7 @@ int evaluate(tnode *root) {
 int main() {
     char prefeq[] = "+*234";
     char postfeq[] = "351^+";
-    char infeq[] = "1*2+4/4";
+    char infeq[] = "3*5/4";
     int pos = 0;
 
     tnode *root = NULL;
