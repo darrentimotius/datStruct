@@ -85,7 +85,7 @@ void pop(char *name) {
         free(temp);
     } else if (strcmp(t->name, name) == 0) {
         node *temp = h;
-        while (strcmp(t->next->name, name) != 0) {
+        while (strcmp(temp->next->name, name) != 0) {
             temp = temp->next;
         }
         free(t);
