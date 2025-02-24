@@ -84,10 +84,14 @@ void pop(char *name) {
         h->prev = NULL;
         free(temp);
     } else if (strcmp(t->name, name) == 0) {
-        node *temp = h;
-        while (strcmp(temp->next->name, name) != 0) {
-            temp = temp->next;
-        }
+        // node *temp = h;
+        // while (strcmp(temp->next->name, name) != 0) {
+        //     temp = temp->next;
+        // }
+        // free(t);
+        // t = temp;
+        // t->next = NULL;
+        node *temp = t->prev;
         free(t);
         t = temp;
         t->next = NULL;
