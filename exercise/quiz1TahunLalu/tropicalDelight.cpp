@@ -10,12 +10,12 @@ struct Data {
     int key = -1;
 }*hash[HASH_SIZE];
 
-int getHashKey(const char* name) {
+long long int getHashKey(const char* name) {
     int l = strlen(name);
 
-    int sumASCII = -1;
+    long long int sumASCII = 1;
     for (int i = 0; i < l; i++) {
-        sumASCII += name[i];
+        sumASCII *= name[i];
     }
 
     sumASCII %= 1000;
@@ -25,7 +25,7 @@ int getHashKey(const char* name) {
 void createData(const char* name, int key) {
     Data *c = (Data*)malloc(sizeof(Data));
 
-    int hashLoc = getHashKey(name);
+    long long int hashLoc = getHashKey(name);
     strcpy(c->name, name);
     c->key = key;
 
