@@ -137,6 +137,7 @@ bool validStayDuration(int stayDuration) {
 
 // Main Function
 void createBooking() {
+    system("clear");
     char name[35];
     char phoneNum[20];
     int age;
