@@ -162,8 +162,7 @@ int main() {
                 break;
             case 3 :
                 viewPackage();
-                break;1
-                
+                break;
             case 4 :
                 exit();
                 return 0;
