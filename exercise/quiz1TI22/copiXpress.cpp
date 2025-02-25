@@ -46,7 +46,7 @@ void push(char* address, char* id, int type, char* typeArr) {
         t = c;
     } else {
         Node *temp = h;
-        while (temp != NULL & temp->next->type >= type) {
+        while (temp != NULL && temp->next->type >= type) {
             temp = temp->next;
         }
         c->next = temp->next;
