@@ -88,13 +88,12 @@ bool pop(char* bookingID) {
     if (c == NULL) return false;
 
     if (strcmp(c->bookingID, bookingID) == 0) {
-        Booking* temp = bookings[key];
-        bookings[key] = temp->next;
-        free(temp);
+        bookings[key] = NULL;
+        free(c);
         return true;
     } else {
         Booking* temp = bookings[key];
-        while (strcmp(temp->next->bookingID, bookingID) != 0) {
+        while (temp->next != NULL && strcmp(temp->next->bookingID, bookingID) != 0) {
             temp = temp->next;
         }
         Booking* toPop = temp->next;
@@ -102,6 +101,7 @@ bool pop(char* bookingID) {
         free(toPop);
         return true;
     }
+    return false;
 }
 
 // Validation Functions
@@ -225,7 +225,7 @@ bool viewBooking() {
 void deleteBooking() {
     if(!viewBooking()) return;
 
-    char bookingID[7];
+    char bookingID[100];
     printf("Input Booking ID (Case Sensitive) : ");
     scanf("%[^\n]", bookingID); gc
 
