@@ -233,7 +233,7 @@ void displayQueue() {
         return;
     }
 
-    puts("--- Current Orders in Queue --- ");
+    puts("                                         --- Current Orders in Queue ---");
     puts("----------------------------------------------------------------------------------------------------------------");
     puts("| No | Customer Name           | Food     | Qty   | Priority       | Distance | Address                        |");
     puts("----------------------------------------------------------------------------------------------------------------");
