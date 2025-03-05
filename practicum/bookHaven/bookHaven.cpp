@@ -18,8 +18,9 @@ struct Node {
 
 int hashKey(char* id) {
     char idTemp[5] = {id[2], id[3], id[4], '\0'};
-
-    long long int idInt = atoi(idTemp);
+    
+    // long long int idInt = atoi(idTemp);
+    long long int idInt = atoi(&id[2]);
     idInt *= idInt;
 
     char square[100];
@@ -162,7 +163,7 @@ void returnBook() {
 	int found = 0;
     for (int i = 0; i < TABLE_SIZE; i++) {
         if (hash[i] != NULL) {
-        	found = 1;
+            found = 1;
             Node* temp = hash[i];
             printf("Borrowing ID : %s\n", temp->borrowingID);
             printf("Borrower Name : %s\n", temp->name);
