@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #define gc getchar();
 #define clear system("clear");
@@ -30,7 +31,7 @@ void printList() {
 
 void printMenu() {
     clear
-    puts("--- Delicioud Delights Food Order Management System ---");
+    puts("--- Delicious Delights Food Order Management System ---");
     printList();
     puts("1. Add Order");
     puts("2. Process Order");
@@ -85,7 +86,8 @@ void push(Node* c) {
 }
 
 bool pop(char* name) {
-    if (strcmp(h->name, name) == 0) {
+    if (h == NULL) return false;
+    else if (strcmp(h->name, name) == 0) {
         Node* temp = h;
         h = h->next;
         free(temp);
