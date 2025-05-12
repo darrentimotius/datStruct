@@ -1,0 +1,42 @@
+EShoe Factory
+
+EShoe Factory is an international shoe factory established in 2015. Since the company is getting bigger, the CEO of the shoe factory decides to recruit a programmer to make an application to manage their production data. You as a professional C programmer are asked to create the application that EShoe Factory requires using AVL Tree data structure. The application has the following requirements:
+
+- The application will consist of 4 menus. They are:
+    1. View Stock
+    2. Insert New Shoe
+    3. Delete Shoe
+    4. Exit
+
+- If user chooses menu 1 (View Stock), the application will:
+    - If there is no data in the AVL Tree, print “There is no data”.
+    - Otherwise, ask user to choose the show method (Pre-Order, Post-Order, and In-Order).
+    - If user choose option 1 (Pre-Order), show all data using pre-order method.
+    - If user choose option 2 (Post-Order), show all data using post-order method.
+    - If user choose option 3 (In-Order), show all data using in-order method.
+
+- If user chooses menu 2 (Insert New Shoe), the application will:
+    - Ask user to input Shoe Name. Validate that the name must be between 5 and 20 characters (inclusive).
+    - Ask user to input Shoe Stock. Validate that the stock must be greater than 0.
+    - Ask user to input Shoe Price. Validate that the price must be between 500000 and 5200000 (inclusive).
+
+    XYYY
+    - X : First character of Shoe Name in uppercase
+    - Y : Random number between 0 – 9   
+    Example:
+    Shoe Name : Airwalk
+    YYY : 119
+    Shoe ID : A119
+
+    - Finally, push the shoe data to the AVL Tree with Shoe ID as a key.
+
+- If user chooses menu 3 (Delete Shoe), the application will:
+    - If there is no data in the AVL Tree, print “There is no data”.
+    - Otherwise, show all shoe data using in-order method.
+    - Ask user to input the Shoe ID they want to delete. Validate that the Shoe ID exist in the AVL Tree.
+    - If the Shoe ID doesn’t exist in the AVL Tree, print shoe with the inputted ID wasn’t found and redirect user back to the main menu.
+    - Otherwise, ask user to input the confirmation input. Validate that the input must be between “Yes” or “No” (case sensitive).
+    - If user input “Yes”, remove the shoe data from the AVL Tree.
+    - Else if user input “No”, redirect user back to the main menu.
+
+- If user chooses menu 4 (Exit), the application will close.
