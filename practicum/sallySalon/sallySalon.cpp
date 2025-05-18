@@ -32,9 +32,17 @@ void printMenu() {
     puts("[1-4]");
 }
 
+void printData(Node* root) {
+    printf("Name : %s\n", root->name);
+    printf("Category : %s\n", root->category);
+    printf("Price : %d\n", root->price);
+    printf("Home Service : %s\n", root->avail);
+    puts("=======================================");
+}
+
 void pre(Node* root) {
     if (root == NULL) return;
-    printf("%s -> ", root->name);
+    printData(root);
     pre(root->left);
     pre(root->right);
 }
@@ -42,7 +50,7 @@ void pre(Node* root) {
 void in(Node* root) {
     if (root == NULL) return;
     in(root->left);
-    printf("%s -> ", root->name);
+    printData(root);
     in(root->right);
 }
 
@@ -50,7 +58,7 @@ void post(Node* root) {
     if (root == NULL) return;
     post(root->left);
     post(root->right);
-    printf("%s -> ", root->name);
+    printData(root);
 }
 
 void view() {
@@ -71,13 +79,10 @@ void view() {
     printf("Total Treatment = %d\n", count);
     if (strcmp(valid, "pre") == 0) {
         pre(root);
-        puts("");
     } else if (strcmp(valid, "in") == 0) {
         in(root);
-        puts("");
     } else {
         post(root);
-        puts("");
     }
 
     enterToCont();
@@ -320,7 +325,7 @@ void del() {
     char name[100];
 
     in(root);
-    printf("\nDelete Treatment\n");
+    printf("Delete Treatment\n");
     printf("input treatment name to be deleted : ");
     scanf("%[^\n]", name); gc
 
