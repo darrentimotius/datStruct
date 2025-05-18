@@ -24,7 +24,15 @@ void enterToCont() {
 
 void printMenu() {
     system("clear");
-    puts("Sally Salon");
+    puts(" _____       _ _         _____       _             ");
+    puts("/  ___|     | | |       /  ___|     | |            ");
+    puts("\\ `--.  __ _| | |_   _  \\ `--.  __ _| | ___  _ __  ");
+    puts(" `--. \\/ _` | | | | | |  `--. \\/ _` | |/ _ \\| '_ \\ ");
+    puts("/\\__/ / (_| | | | |_| | /\\__/ / (_| | | (_) | | | |");
+    puts("\\____/ \\__,_|_|_|\\__, | \\____/ \\__,_|_|\\___/|_| |_|");
+    puts("                  __/ |                            ");
+    puts("                 |___/                             ");
+    printf("\nMenu:\n");
     puts("1. View available Treatment");
     puts("2. Insert New Treatment");
     puts("3. Delete Treatment");
