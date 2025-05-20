@@ -1,352 +1,330 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
+#include <ctype.h>
 
-struct Shoes{
-	char name[101];
-	int stock;
-	long long price;
-	char id[101];
-	Shoes* left;
-	Shoes* right;
-	int height;
+#define gc getchar();
+#define clear system("clear");
+
+int count = 0;
+
+struct Node {
+    char id[10];
+    char name[100];
+    int stock;
+    int price;
+    int height;
+    Node* left;
+    Node* right;
 }*root = NULL;
 
-void menu(){
-	puts("EShoe Factory");
-	puts("=================");
-	puts("1. View Stock");
-	puts("2. Insert New Shoe");
-	puts("3. Delete Shoe");
-	puts("4. Exit");
+void printMenu() {
+    clear
+    puts("EShoe Factory");
+    puts("1. View Stock");
+    puts("2. Insert New Shoe");
+    puts("3. Delete Shoe");
+    puts("4. Exit");
 }
 
-char* generateID(char name[]){
-	char* id = (char*)malloc(11 * sizeof(char));
-	char X;
-	if (name[0] >= 'a' && name[0] <= 'z'){
-		X = name[0] - 'a' + 'A';
-	} else {
-		X = name[0];
-	}
-	
-	int Y = rand()%1000;
-	sprintf(id, "%c%03d", X, Y);
-	return id;
+void enterToContinue() {
+    printf("Press ENTER to continue..."); gc
 }
 
-//buat node AVL
-Shoes* makeShoe(char name[], int stock, long long price, char id[]){
-    Shoes* node = (Shoes*)malloc(sizeof(Shoes));
-    strcpy(node->name, name);
-    node->stock = stock;
-    node->price = price;
-    strcpy(node->id, id);
-    node->left = node->right = NULL;
-    node->height = 1; // default height
-    return node;
+void printData(Node* c) {
+    printf("Total item(s) = %d\n", count);
+    printf("ID : %s\n", c->id);
+    printf("Name : %s\n", c->name);
+    printf("Stock : %d\n", c->stock);
+    printf("Price : %d\n", c->price);
+    puts("================================");
 }
 
-int height(Shoes* root){
-	if(root == NULL){
-		return 0;
-	} else{
-		root->height;
-	}
+void pre(Node* root) {
+    if (root == NULL) return;
+    printData(root);
+    pre(root->left);
+    pre(root->right);
 }
 
-int max(int a, int b){
-	if (a > b){
-		return a;
-	} else {
-		return b;
-	}
+void in(Node* root) {
+    if (root == NULL) return;
+    in(root->left);
+    printData(root);
+    in(root->right);
 }
 
-int getBf(Shoes* root){
-	if(root == NULL){
-		return NULL;
-	}
-	return height(root->left) - height(root->right);
+void post(Node* root) {
+    if (root == NULL) return;
+    post(root->left);
+    post(root->right);
+    printData(root);
 }
 
-Shoes* rightRotate(Shoes* temp){
-	Shoes* kiri = temp->left;
-	Shoes* anak_kanan_si_kiri = kiri->left;
-	kiri->right = temp;
-	temp->left = anak_kanan_si_kiri;
-	temp->height = max(height(temp->left), height(temp->right));
-	kiri->height = max(height(kiri->left), height(kiri->right));
-	return kiri;
-}
-
-Shoes* leftRotate(Shoes* temp){
-	Shoes* kanan = temp->right;
-	Shoes* anak_kiri_si_kanan = kanan->left;
-	kanan->left = temp;
-	temp->right = anak_kiri_si_kanan;
-	temp->height = max(height(temp->left), height(temp->right));
-	kanan->height = max(height(kanan->left), height(kanan->right));
-	return kanan;
-}
-
-Shoes* insertShoe(Shoes* root, Shoes* node){
-	if(root == NULL){
-		return node;
-	} else if(strcmp(root->id, node->id) == 0){
-		return NULL;
-	} else if(strcmp(root->id, node->id) < 0){ //node yang dimasukin lebih besar dari root, jadi ke kanan
-		root->right = insertShoe(root->right, node);
-	} else if(strcmp(root->id, node->id) > 0){
-		root->left = insertShoe(root->left, node);
-	}
-	
-	root->height = 1 + max(height(root->left), height(root->right));
-	
-	//cari balance
-	int bf = getBf(root);
-	
-	if(bf > 1 && strcmp(node->id, root->left->id)<0){
-		return rightRotate(root);
-	}
-	
-	if(bf > 1 && strcmp(node->id, root->left->id)>0){
-		root->left = leftRotate(root);
-		return rightRotate(root);
-	}
-		
-	if(bf > -1 && strcmp(node->id, root->left->id)<0){
-		return leftRotate(root);
-	}
-	
-	if(bf > -1 && strcmp(node->id, root->left->id)>0){
-		root->right = rightRotate(root);
-		return leftRotate(root);
-	}
-	
-	return root;
-}
-
-void insert(){
-	char name[101];
-	int stock;
-	long long price;
-	char id[101];
-	
-	int length;
-	do{
-		printf("Input Shoes Name [between 5 and 20 character]: ");
-		scanf("%s", name); getchar();
-		length = strlen(name);
-	}while(length < 5 || length > 20);
-	
-	do{
-		printf("Input Shoes Stock: ");
-		scanf("%d", &stock); getchar();
-	}while(stock <= 0);
-	
-	do{
-		printf("Input Shoes Price [between 500000 and 520000]: ");
-		scanf("%lld", &price); getchar();
-	}while(price < 500000 || price > 520000);
-	
-	strcpy(id, generateID(name));
-	
-	printf("%s\n", name);
-	printf("%d\n", stock);
-	printf("%lld\n", price);
-	printf("%s\n", id);
-	
-	Shoes* node = makeShoe(name, stock, price, id);
-	root = insertShoe(root, node);
-}
-
-void preOrder(Shoes* root){
-	if(root != NULL){
-		printf("%-10s | %-20s | %-3d | %-6d |\n", root->id, root->name, root->stock, root->price);
-		preOrder(root->left);
-		preOrder(root->right);
-	}	
-}
-
-void inOrder(Shoes* root){
-	if(root != NULL){
-		inOrder(root->left);
-		printf("%-10s | %-20s | %-3d | %-6d |\n", root->id, root->name, root->stock, root->price);
-		inOrder(root->right);
-	}	
-}
-
-void postOrder(Shoes* root){
-	if(root != NULL){
-		postOrder(root->left);
-		postOrder(root->right);
-		printf("%-10s | %-20s | %-3d | %-6d |\n", root->id, root->name, root->stock, root->price);
-	}	
-}
-
-void view(){
-	if (root == NULL){
-		puts("There is no data");
-		return;
-	} else {
-		int choice = -1;
-		puts("View Menu");
-		puts("=================");
-		puts("1. Pre Order");
-		puts("2. In Order");
-		puts("3. Post Order");
-		do{
-			printf(">>");
-			scanf("%d", &choice); getchar();
-		} while(choice < 1 || choice > 3);
-		switch(choice){
-			case 1:
-				preOrder(root);
-				break;
-			case 2:
-				inOrder(root);
-				break;
-			case 3:
-				postOrder(root);
-				break;
-		}	
-	}
-}
-
-Shoes* search(Shoes* root, char id[11]){
-	if(root == NULL){
-		return NULL;
-	} else if (strcmp(id, root->id) < 0){
-		return search(root->left, id);
-	} else if (strcmp(id, root->id) > 0){
-		return search(root->right, id);
-	} else {
-		return root;
-	}
-}
-
-Shoes* successor(Shoes* node){
-    Shoes* curr = node;
-    while (curr && curr->left != NULL){
-        curr = curr->left;
-    }
-    return curr;
-}
-
-Shoes* deletShoe(Shoes* root, char id[]){
-    if (root == NULL){
-        return NULL;
+void viewStock() {
+    clear
+    if (root == NULL) {
+        puts("There is no data");
+        enterToContinue();
+        return;
     }
 
-    if (strcmp(id, root->id) < 0){
-        root->left = deletShoe(root->left, id);
-    } else if (strcmp(id, root->id) > 0){
-        root->right = deletShoe(root->right, id);
-    } else {
-        // Node ditemukan
-        if (root->left == NULL && root->right == NULL){
-            free(root);
-            return NULL;
-        } else if (root->left == NULL){
-            Shoes* temp = root->right;
-            free(root);
-            return temp;
-        } else if (root->right == NULL){
-            Shoes* temp = root->left;
-            free(root);
-            return temp;
-        } else {
-            Shoes* temp = successor(root->right);  // ? gunakan subtree kanan untuk successor
-            strcpy(root->id, temp->id);
-            strcpy(root->name, temp->name);
-            root->stock = temp->stock;
-            root->price = temp->price;
-            root->right = deletShoe(root->right, temp->id);
-        }
+    char valid[100];
+    do {
+        printf("Choose show method [Pre-Order | In-Order | Post-Order] : ");
+        scanf("%[^\n]", valid); gc
+    } while (strcmp(valid, "Pre-Order") != 0 && strcmp(valid, "In-Order") != 0 && strcmp(valid, "Post-Order") != 0);
+
+    if (strcmp(valid, "Pre-Order") == 0) {
+        pre(root);
+    } else if (strcmp(valid, "In-Order") == 0) {
+        in(root);
+    } else if (strcmp(valid, "Post-Order") == 0) {
+        post(root);
     }
 
-    // Update height
+    enterToContinue();
+}
+
+
+void generateID(char* id, char* name) {
+    sprintf(id, "%c%d%d%d", toupper(name[5]), rand() % 10, rand() % 10, rand() % 10);
+}
+
+Node* createNode(char* name, int stock, int price) {
+    Node* c = (Node*)malloc(sizeof(Node));
+    strcpy(c->name, name);
+    c->stock = stock;
+    c->price = price;
+    c->height = 1;
+    c->left = c->right = NULL;
+    generateID(c->id, name);
+
+    return c;
+}
+
+int height(Node* root) {
+    if (root == NULL) return 0;
+    return root->height;
+}
+
+int max(int a, int b) {
+    return a > b ? a : b;
+}
+
+int bf(Node* root) {
+    if (root == NULL) return 0;
+    return height(root->left) - height(root->right);
+}
+
+Node* leftRotate(Node* root) {
+    Node* right = root->right;
+    Node* rightLeft = root->right->left;
+    
+    right->left = root;
+    root->right = rightLeft;
+
+    root->height = 1 + max(height(root->left), height(root->right));
+    right->height = 1 + max(height(right->left), height(right->right));
+
+    return right;
+}
+
+Node* rightRotate(Node* root) {
+    Node* left = root->left;
+    Node* leftRight = root->left->right;
+    
+    left->right = root;
+    root->left = leftRight;
+    
+    root->height = 1 + max(height(root->left), height(root->right));
+    left->height = 1 + max(height(left->left), height(left->right));
+
+    return left;
+}
+
+Node* insertNode(Node* root, Node* c) {
+    if (root == NULL) return c;
+    
+    if (strcmp(c->id, root->id) < 0) {
+        root->left = insertNode(root->left, c);
+    } else if (strcmp(c->id, root->id) > 0) {
+        root->right = insertNode(root->right, c);
+    }
+
     root->height = 1 + max(height(root->left), height(root->right));
 
-    // Cek balance
-    int bf = getBf(root);
-
-    // Left Left Case
-    if (bf > 1 && getBf(root->left) >= 0){
+    if (bf(root) > 1 && bf(root->left) >= 0) {
         return rightRotate(root);
-    }
-
-    // Left Right Case
-    if (bf > 1 && getBf(root->left) < 0){
+    } else if (bf(root) < -1 && bf(root->right) <= 0) {
+        return leftRotate(root);
+    } else if (bf(root) > 1 && bf(root->left) < 0) {
         root->left = leftRotate(root->left);
         return rightRotate(root);
-    }
-
-    // Right Right Case
-    if (bf < -1 && getBf(root->right) <= 0){
-        return leftRotate(root);
-    }
-
-    // Right Left Case
-    if (bf < -1 && getBf(root->right) > 0){
+    } else if (bf(root) < -1 && bf(root->right) > 0) {
         root->right = rightRotate(root->right);
         return leftRotate(root);
     }
-
+    
     return root;
 }
 
-void del(){
-	char id[11];
-	char option[4];
-	if(root == NULL){
-		puts("There is no data!");
-		return;
-	} else {
-		inOrder(root);
-		printf("Input Shoes ID to be deleted: ");
-		scanf("%s", &id);
-		if(search(root, id) != NULL){
-			do{
-				printf("Are u sure u want to delete? ");
-				scanf("%s", option);
-			}while(strcmp(option, "Yes") != 0 && strcmp(option, "No") != 0);
-			
-			if(strcmp(option, "Yes") == 0){
-				deletShoe(root, id);
-				puts("Shoe deleted successfully!");
-			} else{
-				puts("Delete cancelled.");
-			}
-		} else{
-			puts("ID not found!");
-		}
-	}
+bool validName(char* name) {
+    int l = strlen(name);
+    if (l < 5 || l > 20) return false;
+
+    if (name[0] != 'S' || name[1] != 'h' || name[2] != 'o' || name[3] != 'e') return false;
+
+    int flag = 1;
+    for (int i = 0; i < l; i++) {
+        if (name[i] == ' ' && !isalpha(name[i + 1])) {
+            flag = 0;
+            break;
+        }
+    }
+
+    if (flag == 0) return false;
+
+    return true;
 }
 
-int main(){
-	srand(time(NULL));
-	int choice = -1;
-	do{
-		menu();
-		do{
-			printf(">> ");
-			scanf("%d", &choice); getchar();
-		}while(choice < 1 || choice > 4);
-		switch(choice){
-			case 1:
-				view();
-				break;
-			case 2:
-				insert();
-				break;
-			case 3:
-				del();
-				break;
-			case 4:
-				exit(0);
-		}
-	}while(1);
+void insertShoe() {
+    clear
+    char name[100];
+    int stock;
+    int price;
+
+    do {
+        printf("Input shoe name : ");
+        scanf("%[^\n]", name); gc
+    } while (!validName(name));
+
+    do {
+        printf("Input shoe stock : ");
+        scanf("%d", &stock); gc
+    } while (stock < 1);
+
+    do {
+        printf("Input shoe price [500.000 - 5.200.000] : ");
+        scanf("%d", &price); gc
+    } while (price < 500000 || price > 5200000);
+
+    root = insertNode(root, createNode(name, stock, price));
+
+    puts("Shoe has been successfully inserted");
+    count++;
+    enterToContinue();
+}
+
+int search(Node* root, char* id) {
+    if (root == NULL) return 0;
+    if (strcmp(root->id, id) == 0) return 1;
+
+    int left = search(root->left, id);
+    if (left == 1) return 1;
+    return search(root->right, id);
+}
+
+Node* maxValue(Node* root) {
+    Node* c = root;
+    while (c->right != NULL) {
+        c = c->right;
+    }
+
+    return c;
+}
+
+Node* delNode(Node* root, char* id) {
+    if (strcmp(id, root->id) < 0) {
+        root->left = delNode(root->left, id);
+    } else if (strcmp(id, root->id) > 0) {
+        root->right = delNode(root->right, id);
+    } else {
+        if (root->left == NULL && root->right == NULL) {
+            free(root);
+            return NULL;
+        } else if (root->left == NULL || root->right == NULL) {
+            Node* temp = root->left ? root->left : root->right;
+            free(root);
+            return temp;
+        } else {
+            Node* c = maxValue(root->left);
+            strcpy(root->id, c->id);
+            strcpy(root->name, c->name);
+            root->stock = c->stock;
+            root->price = c->price;
+
+            root->left = delNode(root->left, c->id);
+        }
+    }
+
+    root->height = 1 + max(height(root->left), height(root->right));
+
+    if (bf(root) > 1 && bf(root->left) >= 0) {
+        return rightRotate(root);
+    } else if (bf(root) < -1 && bf(root->right) <= 0) {
+        return leftRotate(root);
+    } else if (bf(root) > 1 && bf(root->left) < 0) {
+        root->left = leftRotate(root->left);
+        return rightRotate(root);
+    } else if (bf(root) < -1 && bf(root->right) > 0) {
+        root->right = rightRotate(root->right);
+        return leftRotate(root);
+    }
+    
+    return root;
+}
+
+void deleteShoe() {
+    if (root == NULL) {
+        puts("There is no data");
+        enterToContinue();
+        return;
+    }
+
+    in(root);
+
+    char id[100];
+    do {
+        printf("Input shoe ID to delete : ");
+        scanf("%[^\n]", id); gc
+    } while (!search(root, id));
+
+    if (search(root, id)) {
+        root = delNode(root, id);
+    } else {
+        puts("ID not found!");
+    }
+    enterToContinue();
+}
+
+int main() {
+    do {
+        srand(time(NULL));
+        int inp = -1;
+        printMenu();
+
+        do {
+            printf(">> ");
+            scanf("%d", &inp); gc
+        } while (inp < 1 || inp > 4);
+
+        switch(inp) {
+            case 1:
+                viewStock();
+                break;
+            case 2:
+                insertShoe();
+                break;
+            case 3:
+                deleteShoe();
+                break;
+            case 4:
+                puts("Thank you for using our program!");
+                enterToContinue();
+                return 0;
+        }
+    } while (1);
+    return 0;
 }

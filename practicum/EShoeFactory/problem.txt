@@ -16,7 +16,7 @@ EShoe Factory is an international shoe factory established in 2015. Since the co
     - If user choose option 3 (In-Order), show all data using in-order method.
 
 - If user chooses menu 2 (Insert New Shoe), the application will:
-    - Ask user to input Shoe Name. Validate that the name must be between 5 and 20 characters (inclusive).
+    - Ask user to input Shoe Name. Validate that the name must be between 5 and 20 characters (inclusive), start with "Shoe" and minimum 2 words.
     - Ask user to input Shoe Stock. Validate that the stock must be greater than 0.
     - Ask user to input Shoe Price. Validate that the price must be between 500000 and 5200000 (inclusive).
 
